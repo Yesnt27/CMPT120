@@ -1,0 +1,74 @@
+for num in range(0,6):
+    print('DRINKS')
+    print("Water        Free!")
+    print("Coca Cola    $1.50")
+    print("Sprite       $1.50")
+    print("Ginger Ale   $1.50")
+    
+    print('FOODS')
+    print("Pizza               Free!")
+    print("Hamburger           $2.15")
+    print("Fried Chicken       $2.15")
+    print("Pho                 $2.15")
+    print("Tacos               Free!")
+
+
+    items = {"water":0,
+             "coca cola":150,
+             "sprite":150,
+             "ginger ale":150,
+             "pizza":0,
+             "hamburger":215,
+             "fried chicken":215,
+             "pho":215,
+             "tacos":0
+             }
+    order_quantity = {}
+
+    
+    order_list = [] #numbers of items ordered
+    amount_list = [] #
+    price = 0
+
+    item_input = input("["+str(num)+"] What do you want to order? > ").lower().strip("!?, %$")
+
+    if item_input == "":
+        break
+    
+    if item_input in items:
+        item_amt = int(input("How many would you like? ").lower().strip("!?, %$"))
+        order_quantity[item_input] = item_amt
+        if(item_amt < 1):
+            print("Changing negative amount to 1.")
+            item_amt = 1
+        if(item_amt > 99):
+             print("You cannot order more than 99 items at a time!")
+             item_amt = 99
+        order_quantity[item_input] = item_amt
+    
+
+
+    else:
+        print("I'm sorry, I don't think we sell that.")
+    
+
+#have a price value for the food items 
+#have a seperate price value for drinks
+# some items should be free
+# use for loops to loop through arrays to assign price values for each item
+
+#use 3 tabs to format
+total_price = 0
+
+for item, amount in order_quantity.items():
+    price_per_item = items[item] / 100  # Convert cents to dollars
+    item_total = price_per_item * amount
+
+    if price_per_item == 0:
+        print(f"{amount}x {item.capitalize()}\t\tFree!")
+    else:
+        print(f"{amount}x {item.capitalize()}\t\t${item_total:.2f}")
+    
+    total_price += item_total
+
+print(f"\nTotal Price: ${total_price:.2f}")

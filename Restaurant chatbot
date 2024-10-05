@@ -1,56 +1,63 @@
-for num in range(0,6):
-    print('DRINKS')
-    print("Water        Free!")
-    print("Coca Cola    $1.50")
-    print("Sprite       $1.50")
-    print("Ginger Ale   $1.50")
-    
-    print('FOODS')
-    print("Pizza               Free!")
-    print("Hamburger           $2.15")
-    print("Fried Chicken       $2.15")
-    print("Pho                 $2.15")
-    print("Tacos               Free!")
+# Restaurant Chatbot
+# Kenny Nguyen
+# October 5th 2024
 
-
-    items = {"water":0,
+menu_items = {"water":0,
              "coca cola":150,
              "sprite":150,
              "ginger ale":150,
+
              "pizza":0,
              "hamburger":215,
              "fried chicken":215,
              "pho":215,
-             "tacos":0
+             "tacos":0,
+             "caesar salad":215
              }
-    order_quantity = {}
 
-    
+
+def take_order():
+    total_rows = 0
     order_list = [] #numbers of items ordered
-    amount_list = [] #
-    price = 0
-
-    item_input = input("["+str(num)+"] What do you want to order? > ").lower().strip("!?, %$")
-
-    if item_input == "":
-        break
+    print("Welcome to Canada's favourite restaurant!")
+    for num in range(0,11):
+        print('DRINKS')
+        print("Water               Free!")
+        print("Coca Cola           $1.50")
+        print("Sprite              $1.50")
+        print("Ginger Ale          $1.50")
     
-    if item_input in items:
-        item_amt = int(input("How many would you like? ").lower().strip("!?, %$"))
-        order_quantity[item_input] = item_amt
-        if(item_amt < 1):
-            print("Changing negative amount to 1.")
-            item_amt = 1
-        if(item_amt > 99):
-             print("You cannot order more than 99 items at a time!")
-             item_amt = 99
-        order_quantity[item_input] = item_amt
-    
+        print('FOODS')
+        print("Pizza               Free!")
+        print("Hamburger           $2.15")
+        print("Fried Chicken       $2.15")
+        print("Pho                 $2.15")
+        print("Tacos               Free!")
+        print("Caesar Salad        $2.15")
+        
+        item_input = input("["+str(num)+"] What do you want to order? > ").lower().strip("!?, %$")
 
+        if item_input == "":
+            break
+        
+        if item_input in menu_items:
+            item_amt = int(input("How many would you like? ").lower().strip("!?, %$"))
+            
+            if(item_amt < 1):
+                print("Changing negative amount to 1.")
+                item_amt = 1
+            if(item_amt > 99):
+                print("You cannot order more than 99 items at a time!")
+                item_amt = 99
+                
+            order_list.append((item_input,item_amt))
 
-    else:
-        print("I'm sorry, I don't think we sell that.")
-    
+        else:
+            print(f"I'm sorry, I don't think we sell {item_input}.")
+        
+        if not order_list:
+            print("Nothing purchased")
+            return
 
 #have a price value for the food items 
 #have a seperate price value for drinks
@@ -58,17 +65,27 @@ for num in range(0,6):
 # use for loops to loop through arrays to assign price values for each item
 
 #use 3 tabs to format
-total_price = 0
+    subtotal = 0
+    print()
+    print("RECEIPT")
+    #line 72 with help from ChatGPT
+    for item, amt in order_list:
+        price = menu_items[item] / 100 #convert to cents
+        total_cost = amt * price
+        if(price == 0):
+            print(f"{amt}x {item.capitalize()}           Free!")
+        else: 
+            print(f"{amt}x {item.capitalize()}             $ {total_cost:.2f}")
+        subtotal += total_cost
+        total_rows += 1
 
-for item, amount in order_quantity.items():
-    price_per_item = items[item] / 100  # Convert cents to dollars
-    item_total = price_per_item * amount
+    tax = subtotal * 0.05
+    grand_total = subtotal + tax
 
-    if price_per_item == 0:
-        print(f"{amount}x {item.capitalize()}\t\tFree!")
-    else:
-        print(f"{amount}x {item.capitalize()}\t\t${item_total:.2f}")
-    
-    total_price += item_total
+    print("-----------------------------")
+    print(f"Sub total:          $ {subtotal:.2f}")
+    print(f"Tax:                $ {tax:.2f}")
+    print(f"Total:              $ {grand_total:.2f}")
+    print(f"Receipt lists {total_rows} times")
 
-print(f"\nTotal Price: ${total_price:.2f}")
+take_order()

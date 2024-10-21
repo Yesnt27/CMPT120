@@ -1,7 +1,11 @@
+# Assignment 3: Billboard Top 100
+# Kenny Nguyen
+# October 19th, 2024
+
 import pathlib
 
 # Open the data file
-#   Wave have to tell Python where to find the file, and the file's name.
+#Wave have to tell Python where to find the file, and the file's name.
 #   a) Get name of folder where this code is saved
 folder_of_code = pathlib.Path(__file__).parent.resolve()
 
@@ -10,7 +14,10 @@ hot_100 = f"{folder_of_code}/hot-100-May2024.csv"
 my_file = open(hot_100)
 
 user_name = input("What is your name? ")
-print("Greetings, "+user_name)
+if not user_name:
+    print("You have no name.")
+else:
+    print("Greetings, "+user_name)
 #skip over header line
 unused_header_line=my_file.readline()
 #list of variables for part 1:
@@ -36,8 +43,8 @@ for songs in my_file:
     split = clean_line.split(",")
     if "love".strip("?!, $") in split[2].lower():
         love_songs += 1
-    if(int(split[-2]) == 1 or int(split[-2]) == 2):
-        top_songs.append(split[3])
+    if(int(split[4]) == 1 or int(split[4]) == 2):
+        top_songs.append(split[2])
         top_artists_amt +=1
     if(split[3].startswith('A')):
         A_name_artists+=1
@@ -46,7 +53,9 @@ for songs in my_file:
         avg_weeks += int(split[-1])
         num_of_avg_songs+=1
     if (split[4]).isdigit():
-        if(int(split[1]) < int(split[4])):
+        if(int(split[4]) > int(split[1])):
+            advancing_songs +=1     
+        elif int(split[4]) == 0:
             advancing_songs +=1
    
 print(f"Number songs containing the word 'love': {love_songs}")
@@ -58,6 +67,7 @@ print()
 print(f"Artist names starting with 'A': {A_name_artists}")
 for i in A_name_list:
     print("- "+i)
+print()
 print(f"Songs advancing in rank wrt previous week: {advancing_songs}")
 print(f"Average weeks on board all songs: {float(avg_weeks / num_of_avg_songs):.3}")   
 print()
@@ -71,12 +81,12 @@ print()
 first_query = input("First query: Artist name (may be part of the name): ").lower().strip()
 
 if first_query != "":
-    print(f"{'ARTIST':<35} {'SONG':<35} {'DATE':<18} {'RANK':<11} {'PREVIOUS RANK':<20}")
+    print(f"{'ARTIST':<50} {'SONG':<45} {'DATE':<15} {'RANK':>8} {'PREVIOUS RANK':>15}")
     for songs in my_file:
         clean_line = songs.strip()
         split = clean_line.split(",")
         if first_query.strip("?!, $") in split[3].lower():
-            print(f"{split[3]:<35} {split[2]:<35} {split[0]:<20} {split[1]:<20} {split[4]:<20}")
+            print(f"{split[3]:<50} {split[2]:<45} {split[0]:<15} {split[1]:>8} {split[4]:>15}")
 else:
     print("There is no such artist in the file.")
     
@@ -95,10 +105,11 @@ if second_query != "":
             print(f"{split[2]:<35} {split[0]:<35} {split[-1]:<35}")
             weeks_on_board += (int(split[-1]))
             break
+        
     print()
     print("Songs with more weeks on board than the requested song:")
     print()
-    print(f"{'SONG':<35} {'DATE':<23} {'EXTRA WEEKS ON BOARD':<10}")
+    print(f"{'SONG':<35} {'DATE':<20} {'EXTRA WEEKS ON BOARD':<35}")
     my_file.seek(0)
     unused_header_line2=my_file.readline()
 
@@ -106,18 +117,8 @@ if second_query != "":
         clean_line = songs.strip()
         split = clean_line.split(",")
         if(weeks_on_board < int(split[-1])):
-            print(f"{split[2]:<35} {split[0]:<41} {(int(split[-1])-weeks_on_board):<10}")
+            print(f"{split[2]:<35} {split[0]:<35} {(int(split[-1])-weeks_on_board):>5}")
 else:
     print("No songs matched that name")
-    
-
-
-
-
-
-    
-
-
-
-
+print()
     

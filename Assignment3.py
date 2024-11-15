@@ -79,14 +79,19 @@ print("*"*24)
 my_file.seek(0)
 print()
 first_query = input("First query: Artist name (may be part of the name): ").lower().strip()
-
+check1 = False
 if first_query != "":
+
     print(f"{'ARTIST':<50} {'SONG':<45} {'DATE':<15} {'RANK':>8} {'PREVIOUS RANK':>15}")
     for songs in my_file:
         clean_line = songs.strip()
         split = clean_line.split(",")
         if first_query.strip("?!, $") in split[3].lower():
+            check1 = True
             print(f"{split[3]:<50} {split[2]:<45} {split[0]:<15} {split[1]:>8} {split[4]:>15}")
+    if check1 == False:
+        print("There is no such artist in the file.")
+        
 else:
     print("There is no such artist in the file.")
     
@@ -95,7 +100,7 @@ my_file.seek(0)
 print()
 second_query = input("Second query: Song title (may be part of the name): ").lower().strip()
 weeks_on_board = 0
-
+check = False
 if second_query != "":
     for songs in my_file:
         clean_line = songs.strip()
@@ -104,21 +109,29 @@ if second_query != "":
             print(f"{'REQUESTED_SONG':<35} {'DATE':<23} {'WEEKS ON BOARD':<10}")
             print(f"{split[2]:<35} {split[0]:<35} {split[-1]:<35}")
             weeks_on_board += (int(split[-1]))
+            check = True
             break
-        
-    print()
-    print("Songs with more weeks on board than the requested song:")
-    print()
-    print(f"{'SONG':<35} {'DATE':<20} {'EXTRA WEEKS ON BOARD':<35}")
+        else:
+            check == False
+
+
+    if check == True:
+        print()
+        print("Songs with more weeks on board than the requested song:")
+        print()
+        print(f"{'SONG':<35} {'DATE':<20} {'EXTRA WEEKS ON BOARD':<35}")
     my_file.seek(0)
     unused_header_line2=my_file.readline()
-
-    for songs in my_file:
-        clean_line = songs.strip()
-        split = clean_line.split(",")
-        if(weeks_on_board < int(split[-1])):
-            print(f"{split[2]:<35} {split[0]:<35} {(int(split[-1])-weeks_on_board):>5}")
+    if check == True:
+        for songs in my_file:
+            clean_line = songs.strip("?.,! ")
+            split = clean_line.split(",")
+            current_week = split[-1]
+            if(weeks_on_board < int(current_week)):
+                print(f"{split[2]:<35} {split[0]:<35} {(int(split[-1])-weeks_on_board):>5}")
+    else:
+        print("No songs matched that name")
+    print()
 else:
     print("No songs matched that name")
-print()
-    
+    print()
